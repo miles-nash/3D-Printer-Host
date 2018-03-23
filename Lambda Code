@@ -1,0 +1,170 @@
+'use strict';
+var SPEECH_OUTPUT = 'Hello World!';
+var AlexaSkill = require('./AlexaSkill');
+var https = require('https');
+//User Input////////////////////////////////////////
+var APP_ID = '--------------------';          //The application id of the alexa skill 
+var jobChannelId = ------;                    //ThingSpeak Job Channel ID
+var jobSpeakKey = '----------------';         //ThingSpeak Job Channel Read Key
+var printerChannelId = ------;                //ThingSpeak Printer Channel ID
+var printerSpeakKey = '----------------';     //ThingSpeak Job Printer Read Key
+////////////////////////////////////////////////////
+var fileName,estimatedHours,estimatedMinutes,percentComplete,timePrintedHours,timePrintedMinutes,timeLeftHours,timeLeftMinutes;
+var operational,status,operationalString,statusString;
+
+// Create JobUrl to retrieve data about current print job in JSON format
+var JobUrl = 'https://api.thingspeak.com/channels/' + jobChannelId + '/feed/last.json?api_key=' + jobSpeakKey;
+var PrinterUrl = 'https://api.thingspeak.com/channels/'+ printerChannelId + '/feed/last.json?api_key=' + printerSpeakKey;
+
+var PrinterHost = function () {
+    AlexaSkill.call(this, APP_ID);
+};
+// Extend AlexaSkill
+PrinterHost.prototype = Object.create(AlexaSkill.prototype);
+PrinterHost.prototype.constructor = PrinterHost;
+PrinterHost.prototype.eventHandlers.onSessionStarted = function (sessionStartedRequest, session) {
+    //console.log("onSessionStarted requestId: " + sessionStartedRequest.requestId + ", sessionId: " + session.sessionId);
+    // any initialization logic goes here
+};
+PrinterHost.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
+    //console.log("onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
+    handlePrinterHostRequest(response);
+};
+/**
+ * Overridden to show that a subclass can override this function to teardown session state.
+ */
+PrinterHost.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, session) {
+    //console.log("onSessionEnded requestId: " + sessionEndedRequest.requestId + ", sessionId: " + session.sessionId);
+    // any cleanup logic goes here
+};
+PrinterHost.prototype.intentHandlers = {
+  
+    "Introduction": function (intent, session, response) {
+        var speechOutput = "Hey! I am printerhost, your 3d printer monitoring system. I can monitor your 3d printer by updating you on information such as printer state, percent job completion, and estimated time left on a print.";
+        response.tell(speechOutput);
+    },
+    "Overview": function (intent, session, response) {
+        var speechOutput = "Your print is " + percentComplete +
+                " percent complete and has " + timeLeftHours + " hours and " +
+                timeLeftMinutes + " minutes remaining on a " + estimatedHours +
+                " hours and " + estimatedMinutes + " minute print of " + fileName;
+                
+        response.tell(speechOutput);
+    },
+    "TimeLeft": function (intent, session, response) {
+        var speechOutput = "Your print has " + timeLeftHours +
+        " hours and " + timeLeftMinutes + " minutes remaining";
+        response.tell(speechOutput);
+    },
+    "TimePrinted": function (intent, session, response) {
+        var speechOutput = "Your print has been printing for " +
+                timePrintedHours + " hours and " + timePrintedMinutes + " minutes";
+        response.tell(speechOutput);
+    },
+    "PercentComplete": function (intent, session, response) {
+        var speechOutput = "Your print is " + percentComplete + 
+        " percent complete";
+        response.tell(speechOutput);
+    },
+    "EstimatedTime": function (intent, session, response) {
+        var speechOutput = "Your print is estimated to last a total of " + 
+                estimatedHours + " hours and " + estimatedMinutes + " minutes";
+        response.tell(speechOutput);
+    },
+    "FileName": function (intent, session, response) {
+        var speechOutput = "Your printer is printing " + fileName;
+        response.tell(speechOutput);
+    },
+    "PrinterData": function (intent, session, response){
+        
+        var speechOutput = 'your printer is ' + operationalString + ' and is currently ' + statusString;
+        response.tell(speechOutput);
+    },
+    "AMAZON.HelpIntent": function (intent, session, response) {
+        response.ask("You can say ask PrinterHost for Job statistics, or, you can ask about your printer... What can I do for you?", "What can I do for you?");
+    },
+    "AMAZON.StopIntent": function (intent, session, response) {
+        var speechOutput = "Goodbye";
+        response.tell(speechOutput);
+    },
+    "AMAZON.CancelIntent": function (intent, session, response) {
+        var speechOutput = "Goodbye";
+        response.tell(speechOutput);
+    }
+};
+/* -------------------------------------------------------------
+ * Get all thingspeak data and map to variables
+ * -------------------------------------------------------------
+ */
+function handlePrinterHostRequest(response) {
+    // Create speech output
+    var speechOutput = "Greetings, I did not understand what you want. How may I serve you?";
+    var cardTitle = "Initial Request";
+    response.tellWithCard(speechOutput, cardTitle, speechOutput);
+}
+// Create the handler that responds to the Alexa Request.
+exports.handler = function (event, context) {
+    https.get(JobUrl, function(res) {
+        // Get latest sensor data from home IoT SoC
+        res.on('data', function(d) {
+            fileName = JSON.parse(d).field1;
+            estimatedHours = JSON.parse(d).field2;
+            estimatedMinutes = JSON.parse(d).field3;
+            percentComplete = JSON.parse(d).field4;
+            timePrintedHours = JSON.parse(d).field5;
+            timePrintedMinutes = JSON.parse(d).field6;
+            timeLeftHours = JSON.parse(d).field7;
+            timeLeftMinutes = JSON.parse(d).field8;
+           
+          
+           
+            
+            
+            
+            
+            // Create an instance of the SpaceGeek skill.
+            var PrinterHost_skill = new PrinterHost();
+            PrinterHost_skill.execute(event, context);
+        });
+        res.on('end', function() {
+        });
+        res.on('error', function(e) {
+            context.fail("Got error: " + e.message);
+        });
+    });
+    https.get(PrinterUrl, function(res) {
+        // Get latest sensor data from home IoT SoC
+        res.on('data', function(d) {
+            operational = JSON.parse(d).field1;
+            status = JSON.parse(d).field2;
+            
+           
+          
+           
+            if (operational == ("1")){
+              operationalString = 'operational';
+          }else{
+             operationalString =  'not operational';
+          }
+          
+          if (status == "1"){
+              statusString = 'printing';
+          }else if(status == "2"){
+              statusString = 'paused';
+          }else{
+              statusString = 'disconnected or experiencing an error';
+          }
+            
+            
+            
+            // Create an instance of the SpaceGeek skill.
+            var PrinterHost_skill = new PrinterHost();
+            PrinterHost_skill.execute(event, context);
+        });
+        res.on('end', function() {
+        });
+        res.on('error', function(e) {
+            context.fail("Got error: " + e.message);
+        });
+    });
+};
