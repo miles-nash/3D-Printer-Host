@@ -32,6 +32,7 @@ const int octoprint_httpPort = 80;  //If you are connecting through a router thi
 //           Color Setttings
 //------------------------------------------
 int background = 1;                                          //Would you like yout Printer Host to show a color even when not printing? 1 = yes 0 = no
+int printingBackgound = 0;                                  //Would you like the backround to be displayed even when the printer is prining? 1 = yes 0 = no (disregard if you do not want a background)
 int brightness = 150;                                        //How bright would you like your Neopixel Display? 1-255
 uint32_t standby = strip.Color(0, 0, 255);                   //What color would you like to show as the background (disregard if you do not want a background)
 uint32_t error = strip.Color(255, 0, 0);                     //What color would you like to indicate that the printer is disconnected or experiencing an error
@@ -261,6 +262,11 @@ void loop() {
   //-----------------------------------------------------------------------------
   //                  Display data using neopixels
   //-----------------------------------------------------------------------------
+  if(printingBackgound == 0){
+     for(int i = 0; i<= ringLength; i++){  // clear the pixels between displays
+      strip.setPixelColor(i, off);
+    }
+  }
   if (operational == "0"){
     for(int i = 0; i<= ringLength; i++){  //display error color if experiencing an error
       strip.setPixelColor(i, error);
