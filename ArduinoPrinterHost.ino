@@ -20,6 +20,7 @@ WiFiClient client;
 //------------------------------------------
 //              User Data
 //------------------------------------------
+
 const char* ssid     = "----------";            //your SSID(name) of WIFI
 const char* password = "----------";       // password of Wifi
 
@@ -28,11 +29,12 @@ String PrinterTSAPIKey = "----------"; //thingspeak PrinterHost.Printer write Ke
 String JobTSAPIKey = "----------"; //thingspeak PrinterHost.Job API Key
 IPAddress ip(--, -, -, ---);  // IP adress of Raspberry Pi. 11.1.1.111 = (11, 1, 1, 111)
 const int octoprint_httpPort = 80;  //If you are connecting through a router this will work, but you need a random port forwarded to the OctoPrint server from your router. Enter that port here if you are external
+
+
 //------------------------------------------
 //           Color Setttings
 //------------------------------------------
 int background = 1;                                          //Would you like yout Printer Host to show a color even when not printing? 1 = yes 0 = no
-int printingBackgound = 0;                                  //Would you like the backround to be displayed even when the printer is prining? 1 = yes 0 = no (disregard if you do not want a background)
 int brightness = 150;                                        //How bright would you like your Neopixel Display? 1-255
 uint32_t standby = strip.Color(0, 0, 255);                   //What color would you like to show as the background (disregard if you do not want a background)
 uint32_t error = strip.Color(255, 0, 0);                     //What color would you like to indicate that the printer is disconnected or experiencing an error
@@ -41,6 +43,9 @@ uint32_t printing = strip.Color(0, 255, 0);                  //What color would 
 //All Colors Are In RGB Format
 //------------------------------------------
 //------------------------------------------
+bool debug = true;
+int bedTemp;
+int toolTemp;
 String operational;    
 String status; 
 String fileName;
@@ -132,7 +137,13 @@ void loop() {
         Serial.println(api.printerStats.printerStateready);
         Serial.print("Printer State - sdReady:  ");
         Serial.println(api.printerStats.printerStatesdReady);
-        Serial.println("------------------------");              
+        Serial.println();
+        Serial.println("------Termperatures-----");
+        Serial.print("Printer Temp - Tool (°C):  ");
+        Serial.println(api.printerStats.printerTool0TempActual);
+        Serial.print("Printer State - Bed (°C):  ");
+        Serial.println(api.printerStats.printerBedTempActual);
+        Serial.println("------------------------");           
       }
       Serial.println();
       if(api.getPrintJob()){  //Get the print job API endpoint
@@ -180,6 +191,8 @@ void loop() {
         status = "4";
       }
       //map all received data to variables and convert times to hh:mm format
+      toolTemp = api.printerStats.printerTool0TempActual;
+      bedTemp = api.printerStats.printerBedTempActual;
       fileName = api.printJob.jobFileName;
       estimatedTime = api.printJob.estimatedPrintTime;
       percentComplete = api.printJob.progressCompletion;
@@ -219,7 +232,7 @@ void loop() {
     }
     //update data
     //updates values in printer thingspeak channel
-    client.print(String("GET ")  + "/update?api_key="+PrinterTSAPIKey+"&field1="+operational+"&field2="+status+" HTTP/1.1\r\n" +
+    client.print(String("GET ")  + "/update?api_key="+PrinterTSAPIKey+"&field1="+operational+"&field2="+status+"&field3="+toolTemp+"&field4="+bedTemp+" HTTP/1.1\r\n" +
                 "Host: " + host + "\r\n" + 
                 "Connection: close\r\n\r\n");                                                         //updates values in printer thingspeak channel   
                 
@@ -235,38 +248,38 @@ void loop() {
                 "Connection: close\r\n\r\n");                                                        //updates values in job thingspeak channel
                       
   
-  
-    //serial print data: for debugging
-    Serial.println("Thingspeak Updated");
-    delay(10);
-    Serial.println("operational = " + operational);   
-    delay(10);
-    Serial.println("status = " + status);   
-    delay(10);
-    Serial.println("file name = " + fileName);   
-    delay(10);
-    Serial.println("estimated print time = " + estimatedTimeMinutes);   
-    delay(10);
-    Serial.println("percent complete = " + percentComplete);   
-    delay(10);
-    Serial.println("hours printed = " + timePrintedHours);   
-    delay(10);
-    Serial.println("minutes printed = " + timePrintedMinutes);   
-    delay(10);
-    Serial.println("Hours remaining = " + timeLeftHours); 
-    delay(10);
-    Serial.println("mnutes remaining = " + timeLeftMinutes); 
+    if (debug == 2){
+      //serial print data: for debugging
+      Serial.println("Thingspeak Updated");
+      delay(10);
+      Serial.println("operational = " + operational);   
+      delay(10);
+      Serial.println("status = " + status);   
+      delay(10);
+      Serial.println("tool temp = " + toolTemp);
+      delay(10);
+      Serial.println("bed temp = " + bedTemp);
+      delay(10);
+      Serial.println("file name = " + fileName);   
+      delay(10);
+      Serial.println("estimated print time = " + estimatedTimeMinutes);   
+      delay(10);
+      Serial.println("percent complete = " + percentComplete);   
+      delay(10);
+      Serial.println("hours printed = " + timePrintedHours);   
+      delay(10);
+      Serial.println("minutes printed = " + timePrintedMinutes);   
+      delay(10);
+      Serial.println("Hours remaining = " + timeLeftHours); 
+      delay(10);
+      Serial.println("mnutes remaining = " + timeLeftMinutes); 
+    }
     api2_lasttime = millis();
   }
 
   //-----------------------------------------------------------------------------
   //                  Display data using neopixels
   //-----------------------------------------------------------------------------
-  if(printingBackgound == 0){
-     for(int i = 0; i<= ringLength; i++){  // clear the pixels between displays
-      strip.setPixelColor(i, off);
-    }
-  }
   if (operational == "0"){
     for(int i = 0; i<= ringLength; i++){  //display error color if experiencing an error
       strip.setPixelColor(i, error);
