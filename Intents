@@ -1,0 +1,28 @@
+{
+  "intents": [
+    {
+      "intent": "Introduction"
+    },
+    {
+      "intent": "Overview"
+    },
+    {
+      "intent": "TimeLeft"
+    },
+    {
+      "intent": "TimePrinted"
+    },
+    {
+      "intent": "PercentComplete"
+    },
+    {
+      "intent": "EstimatedTime"
+    },
+    {
+      "intent": "FileName"
+    },
+    {
+      "intent": "PrinterData"
+    }
+  ]
+}
