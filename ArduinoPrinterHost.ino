@@ -44,6 +44,7 @@ uint32_t printing = strip.Color(0, 255, 0);                  //What color would 
 //------------------------------------------
 //------------------------------------------
 bool debug = true;
+String readString;
 int bedTemp;
 int toolTemp;
 String operational;    
@@ -230,6 +231,41 @@ void loop() {
       Serial.println("connection failed");
       return;
     }
+
+
+     //updates values in printer thingspeak channel
+    client.print(String("GET ")  + "/channels/457671/feeds/last.json?api_key=YTOCL6O92074HNSP&results=1 HTTP/1.1\r\n" +
+                "Host: " + host + "\r\n" + 
+                "Connection: close\r\n\r\n");                                                         //updates values in printer thingspeak channel   
+
+                
+      while(client.connected() && !client.available()) delay(1); //waits for data
+      while (client.connected() || client.available()) { //connected or data available
+        char c = client.read(); //gets byte from ethernet buffer
+        readString += c; //places captured byte in readString
+      }
+
+  //Serial.println();
+  client.stop(); //stop client
+  Serial.println("client disconnected.");
+  Serial.println("Data from server captured in readString:");
+  Serial.println();
+  Serial.print(readString); //prints readString to serial monitor 
+  Serial.println();  
+  Serial.println();
+  Serial.println("End of readString");
+  Serial.println("==================");
+  Serial.println();
+  readString.remove(0, 652);
+  readString.remove(108);
+  Serial.println(readString);
+  readString=""; //clear readString variable
+//  Serial.println("please: "+ readString.charAt(readString.length() - 1]);
+//  )
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//TO DO: Clean Up, Parse, Rset TS, Connect to OctoPrint commands.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                
     //update data
     //updates values in printer thingspeak channel
     client.print(String("GET ")  + "/update?api_key="+PrinterTSAPIKey+"&field1="+operational+"&field2="+status+"&field3="+toolTemp+"&field4="+bedTemp+" HTTP/1.1\r\n" +
@@ -246,9 +282,11 @@ void loop() {
     client.print(String("GET ")  + "/update?api_key="+JobTSAPIKey+"&field1="+fileName+"&field2="+estimatedTimeHours+"&field3="+estimatedTimeMinutes+"&field4="+percentComplete+"&field5="+timePrintedHours+"&field6="+timePrintedMinutes+"&field7="+timeLeftHours+"&field8="+timeLeftMinutes+" HTTP/1.1\r\n" +
                 "Host: " + host + "\r\n" + 
                 "Connection: close\r\n\r\n");                                                        //updates values in job thingspeak channel
-                      
+
+    //handle POST commands
+    
   
-    if (debug == 2){
+    if (debug == true){
       //serial print data: for debugging
       Serial.println("Thingspeak Updated");
       delay(10);
@@ -276,6 +314,11 @@ void loop() {
     }
     api2_lasttime = millis();
   }
+
+  //-----------------------------------------------------------------------------
+  //                  Check for Post commands
+  //-----------------------------------------------------------------------------
+
 
   //-----------------------------------------------------------------------------
   //                  Display data using neopixels
