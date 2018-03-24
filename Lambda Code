@@ -83,7 +83,7 @@ PrinterHost.prototype.intentHandlers = {
         response.tell(speechOutput);
     },
     "StartPOST": function (intent, session, response){
-        var speechOurtput = 'okay, I have started a print of '+ fileName;
+        var speechOutput = 'okay, I have started a print of '+ fileName;
         var URL = "https://api.thingspeak.com/update?api_key=TTHFDO48ESCT655Y&field1=1";
         https.get(URL, function(res) {
             console.log("status: " + res.statusCode);
