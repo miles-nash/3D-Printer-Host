@@ -6,11 +6,13 @@ var https = require('https');
 var APP_ID = '--------------------';          //The application id of the alexa skill 
 var jobChannelId = ------;                    //ThingSpeak Job Channel ID
 var jobSpeakKey = '----------------';         //ThingSpeak Job Channel Read Key
+var jobWriteKey = '----------------';         //ThingSpeak Job Channel Write Key
 var printerChannelId = ------;                //ThingSpeak Printer Channel ID
-var printerSpeakKey = '----------------';     //ThingSpeak Job Printer Read Key
+var printerSpeakKey = '----------------';     //ThingSpeak Printer Read Key
+var printerWriteKey = '----------------';     //ThingSpeak Printer Write Key
 ////////////////////////////////////////////////////
 var fileName,estimatedHours,estimatedMinutes,percentComplete,timePrintedHours,timePrintedMinutes,timeLeftHours,timeLeftMinutes;
-var operational,status,operationalString,statusString;
+var operational,status,operationalString,statusString,toolTemp,bedTemp;
 
 // Create JobUrl to retrieve data about current print job in JSON format
 var JobUrl = 'https://api.thingspeak.com/channels/' + jobChannelId + '/feed/last.json?api_key=' + jobSpeakKey;
@@ -80,6 +82,12 @@ PrinterHost.prototype.intentHandlers = {
         var speechOutput = 'your printer is ' + operationalString + ' and is currently ' + statusString;
         response.tell(speechOutput);
     },
+    "StartPOST": function (intent, session, response){
+        var speechOutput = 'okay, I have started a print of '+ fileName;
+        var URL = "https://api.thingspeak.com/update?api_key="+postWriteKey+"&field1=1";
+        https.get(URL, function(res) {});
+        response.tell(speechOutput);
+    },
     "AMAZON.HelpIntent": function (intent, session, response) {
         response.ask("You can say ask PrinterHost for Job statistics, or, you can ask about your printer... What can I do for you?", "What can I do for you?");
     },
@@ -137,7 +145,8 @@ exports.handler = function (event, context) {
         res.on('data', function(d) {
             operational = JSON.parse(d).field1;
             status = JSON.parse(d).field2;
-            
+            toolTemp = JSON.parse(d).field3;
+            bedTemp = JSON.parse(d).field4;
            
           
            
