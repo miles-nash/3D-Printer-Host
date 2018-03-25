@@ -162,3 +162,48 @@ PrinterData if my printer is running smoothly
 PrinterData to tell me how my printer is doing
 PrinterData how is my printer
 PrinterData how's my printer
+StartPOST start my print
+StartPOST start a print of the current selected file
+StartPOST begin a print
+StartPOST begin my print
+StartPOST start print
+StartPOST start printing
+StartPOST start the print
+StartPOST start printing selected file
+StartPOST start printing the currently selected file
+StartPOST start printing the file i selected
+CancelPOST cancel my current print
+CancelPOST end my print
+CancelPOST cancel
+CancelPOST cancel my print
+CancelPOST end the current print
+CancelPOST cancel the file currently printing
+CancelPOST cancel the file i am printing
+CancelPOST cancel the print that is printing
+CancelPOST cancel the print that is being printed
+RestartPOST restart the file printing
+RestartPOST restart my three dee print
+RestartPOST restart the print that is currently printing
+RestartPOST restart
+RestartPOST restart the file my three dee printer is printing
+RestartPOST restart the current print
+RestartPOST restart my current three dee print
+RestartPOST restart my print
+PausePOST pause the current file
+PausePOST resume the current model
+PausePOST unpause my print
+PausePOST unpause
+PausePOST resume print
+PausePOST resume printing
+PausePOST resume
+PausePOST pause
+PausePOST pause my print
+PausePOST pause the three dee print
+PausePOST resume the three dee print
+PausePOST resume the file being printed
+PausePOST unpause the print my pinter is printing
+PausePOST pause the print
+ConfirmPause confirm pause
+ConfirmStart confirm start
+ConfirmRestart confirm restart
+confirmCancel confirm cancel
