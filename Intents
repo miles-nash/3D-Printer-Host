@@ -22,6 +22,30 @@
       "intent": "FileName"
     },
     {
+      "intent": "StartPOST"
+    },
+    {
+      "intent": "ConfirmStart"
+    },
+    {
+      "intent": "RestartPOST"
+    },
+    {
+      "intent": "ConfirmRestart"
+    },
+    {
+      "intent": "PausePOST"
+    },
+    {
+      "intent": "ConfirmPause"
+    },
+    {
+      "intent": "CancelPOST"
+    },
+    {
+      "intent": "ConfirmCancel"
+    },  
+    {
       "intent": "PrinterData"
     }
   ]
