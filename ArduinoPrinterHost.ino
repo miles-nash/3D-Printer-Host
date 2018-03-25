@@ -21,14 +21,18 @@ WiFiClient client;
 //              User Data
 //------------------------------------------
 
-const char* ssid     = "----------";            //your SSID(name) of WIFI
+const char* ssid     = "----------";       //your SSID(name) of WIFI
 const char* password = "----------";       // password of Wifi
 
-String OctoPrintAPIKey = "----------"; //API key from OctoPrint
-String PrinterTSAPIKey = "----------"; //thingspeak PrinterHost.Printer write Key
-String JobTSAPIKey = "----------"; //thingspeak PrinterHost.Job API Key
-IPAddress ip(--, -, -, ---);  // IP adress of Raspberry Pi. 11.1.1.111 = (11, 1, 1, 111)
-const int octoprint_httpPort = 80;  //If you are connecting through a router this will work, but you need a random port forwarded to the OctoPrint server from your router. Enter that port here if you are external
+String OctoPrintAPIKey = "----------";     //API key from OctoPrint
+String PrinterTSAPIKey = "----------";     //write api key for thingspeak printer channel
+String JobTSAPIKey = "----------";         //write api key for thingspeak job channel
+String POSTWriteAPIKey = "----------";     //write api key for thingspeak POST channel
+String POSTReadApiKey = "----------";      //read api key for thingspeak POST channel
+String POSTid = "------";                  //channel id for thingspeak POST channel
+
+IPAddress ip(--, -, -, ---);               // IP adress of Raspberry Pi. 11.1.1.111 = (11, 1, 1, 111)
+const int octoprint_httpPort = 80;         //If you are connecting through a router this will work, but you need a random port forwarded to the OctoPrint server from your router. Enter that port here if you are external
 
 
 //------------------------------------------
