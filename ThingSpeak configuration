@@ -1,0 +1,28 @@
+Configuration of Thingspeak Channels and fields for this project
+----------------------------------------------------------------
+
+Channel:Printer
+Fields:
+  1.Operational?
+  2.Status
+  3.Tool Temperature
+  4.Bed Temperature
+ -------------------------
+Channel:Job
+Fields:
+  1.File Name
+  2.Estimated Hours
+  3.Estimated Minutes
+  4.Percent Complete
+  5.Time Printed Hours
+  6.Time Printed Minutes
+  7.Time Left Hours
+  8.Time Left Minutes
+ -------------------------
+Channel:POST
+Fields:
+  1.Start
+  2.Cancel
+  3.Restart
+  4.Pause/Resume
+-------------------------
