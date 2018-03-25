@@ -47,6 +47,10 @@ uint32_t printing = strip.Color(0, 255, 0);                  //What color would 
 //All Colors Are In RGB Format
 //------------------------------------------
 //------------------------------------------
+String postStart;
+String postCancel;
+String postRestart;
+String postPause;
 bool debug = true;
 String TSPostString;
 int bedTemp;
@@ -99,10 +103,11 @@ void setup() {
   
   wifiConnect();
 
+    //Reset POST commands
+    client.print(String("GET ")  + "/update?api_key="+POSTWriteApiKey+"&field1=0&field2=0&field3=0&field4=0 HTTP/1.1\r\n" +
+                "Host: " + host + "\r\n" + 
+                "Connection: close\r\n\r\n");
 }
-
-
-
 void loop() {
 
   delay(100);
@@ -267,12 +272,33 @@ void loop() {
     const char* field2 = root["field2"]; // "0"
     const char* field3 = root["field3"]; // "0"
     const char* field4 = root["field4"]; // "0"
-    //debug
     Serial.println("debug");
     Serial.println(field1); 
     Serial.println(field2); 
     Serial.println(field3); 
     Serial.println(field4); 
+    postStart = String(field1);
+    postCancel = String(field2);
+    postRestart = String(field3);
+    postPause = String(field4);
+    if(postStart == "1"){
+      api.octoPrintJobStart();
+      Serial.print("Print started");
+    }
+    if(postCancel == "1"){
+      api.octoPrintJobCancel();
+      Serial.print("Print cancelled");
+    }
+    if(postRestart == "1"){
+      api.octoPrintJobRestart();
+      Serial.print("Print restarted");
+    }
+    if(postPause == "1"){
+      api.octoPrintJobPauseResume();
+      Serial.print("Print resumed/paused");
+    }
+    
+    
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //TO DO: Clean Up, Parse, Connect to OctoPrint commands.
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -300,10 +326,10 @@ void loop() {
     }
     delay(100);
     //Reset POST commands
-    /*client.print(String("GET ")  + "/update?api_key="+POSTWriteApiKey+"&field1=0&field2=0&field3=0&field4=0 HTTP/1.1\r\n" +
+    client.print(String("GET ")  + "/update?api_key="+POSTWriteApiKey+"&field1=0&field2=0&field3=0&field4=0 HTTP/1.1\r\n" +
                 "Host: " + host + "\r\n" + 
                 "Connection: close\r\n\r\n");
-  */
+  
     if (debug == true){
       //serial print data: for debugging
       Serial.println("Thingspeak Updated");
