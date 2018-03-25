@@ -44,7 +44,7 @@ uint32_t printing = strip.Color(0, 255, 0);                  //What color would 
 //------------------------------------------
 //------------------------------------------
 bool debug = true;
-String readString;
+String TSPostString;
 int bedTemp;
 int toolTemp;
 String operational;    
@@ -233,42 +233,36 @@ void loop() {
     }
 
 
-     //updates values in printer thingspeak channel
-    client.print(String("GET ")  + "/channels/457671/feeds/last.json?api_key=YTOCL6O92074HNSP&results=1 HTTP/1.1\r\n" +
+    //check for POST commands
+    //code adapted from zoomkat arduino forum post: http://forum.arduino.cc/index.php?topic=44646.0
+    client.print(String("GET ")  + "/channels/"+457671+"/feeds/last.json?api_key="+POSTReadApiKey+"&results=1 HTTP/1.1\r\n" +
                 "Host: " + host + "\r\n" + 
                 "Connection: close\r\n\r\n");                                                         //updates values in printer thingspeak channel   
 
                 
-      while(client.connected() && !client.available()) delay(1); //waits for data
-      while (client.connected() || client.available()) { //connected or data available
-        char c = client.read(); //gets byte from ethernet buffer
-        readString += c; //places captured byte in readString
-      }
+     while(client.connected() && !client.available()) delay(1); //waits for data
+     while (client.connected() || client.available()) { //connected or data available
+      char c = client.read(); //gets byte from ethernet buffer
+      TSPostString += c; //places captured byte in TSPostString
+     }
+    TSPostString.remove(0,TSPostString.indexOf("{")); //isolate the json data
+    TSPostString.remove(TSPostString.indexOf("}")+1); //isolate the json data
+    Serial.println(TSPostString);
+    TSPostString=""; //clear TSPostString variable
 
-  //Serial.println();
-  client.stop(); //stop client
-  Serial.println("client disconnected.");
-  Serial.println("Data from server captured in readString:");
-  Serial.println();
-  Serial.print(readString); //prints readString to serial monitor 
-  Serial.println();  
-  Serial.println();
-  Serial.println("End of readString");
-  Serial.println("==================");
-  Serial.println();
-  readString.remove(0, 652);
-  readString.remove(108);
-  Serial.println(readString);
-  readString=""; //clear readString variable
-//  Serial.println("please: "+ readString.charAt(readString.length() - 1]);
-//  )
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//TO DO: Clean Up, Parse, Rset TS, Connect to OctoPrint commands.
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //parsing
+    //code adapted from
+    const size_t bufferSize = JSON_OBJECT_SIZE(6);
+    DynamicJsonBuffer jsonBuffer(bufferSize);
+    //json parameters
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //TO DO: Clean Up, Parse, Rset TS, Connect to OctoPrint commands.
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 
     //update data
     //updates values in printer thingspeak channel
-    client.print(String("GET ")  + "/update?api_key="+PrinterTSAPIKey+"&field1="+operational+"&field2="+status+"&field3="+toolTemp+"&field4="+bedTemp+" HTTP/1.1\r\n" +
+    client.print(String("GET ")  + "/update?api_key="+printerTSAPIKey+"&field1="+operational+"&field2="+status+"&field3="+toolTemp+"&field4="+bedTemp+" HTTP/1.1\r\n" +
                 "Host: " + host + "\r\n" + 
                 "Connection: close\r\n\r\n");                                                         //updates values in printer thingspeak channel   
                 
@@ -279,12 +273,18 @@ void loop() {
 
 
     //updates values in job thingspeak channel 
-    client.print(String("GET ")  + "/update?api_key="+JobTSAPIKey+"&field1="+fileName+"&field2="+estimatedTimeHours+"&field3="+estimatedTimeMinutes+"&field4="+percentComplete+"&field5="+timePrintedHours+"&field6="+timePrintedMinutes+"&field7="+timeLeftHours+"&field8="+timeLeftMinutes+" HTTP/1.1\r\n" +
+    client.print(String("GET ")  + "/update?api_key="+jobTSAPIKey+"&field1="+fileName+"&field2="+estimatedTimeHours+"&field3="+estimatedTimeMinutes+"&field4="+percentComplete+"&field5="+timePrintedHours+"&field6="+timePrintedMinutes+"&field7="+timeLeftHours+"&field8="+timeLeftMinutes+" HTTP/1.1\r\n" +
                 "Host: " + host + "\r\n" + 
                 "Connection: close\r\n\r\n");                                                        //updates values in job thingspeak channel
 
-    //handle POST commands
-    
+    if (!client.connect(host, httpPort)) {
+      Serial.println("connection failed");
+      return;
+    }
+    //Reset POST commands
+    client.print(String("GET ")  + "/update?api_key="+POSTWriteApiKey+"&field1=0&field2=0&field3=0&field4=0 HTTP/1.1\r\n" +
+                "Host: " + host + "\r\n" + 
+                "Connection: close\r\n\r\n");
   
     if (debug == true){
       //serial print data: for debugging
