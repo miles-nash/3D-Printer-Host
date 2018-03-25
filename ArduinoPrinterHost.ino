@@ -239,7 +239,7 @@ void loop() {
 
     //check for POST commands
     //code adapted from zoomkat arduino forum post: http://forum.arduino.cc/index.php?topic=44646.0
-    client.print(String("GET ")  + "/channels/"+457671+"/feeds/last.json?api_key="+POSTReadApiKey+"&results=1 HTTP/1.1\r\n" +
+    client.print(String("GET ")  + "/channels/"+POSTid+"/feeds/last.json?api_key="+POSTReadApiKey+"&results=1 HTTP/1.1\r\n" +
                 "Host: " + host + "\r\n" + 
                 "Connection: close\r\n\r\n");                                                         //updates values in printer thingspeak channel   
 
@@ -252,16 +252,29 @@ void loop() {
     TSPostString.remove(0,TSPostString.indexOf("{")); //isolate the json data
     TSPostString.remove(TSPostString.indexOf("}")+1); //isolate the json data
     Serial.println(TSPostString);
+    String fixedString = TSPostString;
     TSPostString=""; //clear TSPostString variable
-
+    
     //parsing
     //code adapted from
     const size_t bufferSize = JSON_OBJECT_SIZE(6);
     DynamicJsonBuffer jsonBuffer(bufferSize);
+    char b[104];
+    TSPostString.toCharArray(b,104);
+    JsonObject& root = jsonBuffer.parseObject(fixedString);
     //json parameters
-
+    const char* field1 = root["field1"]; // "1"
+    const char* field2 = root["field2"]; // "0"
+    const char* field3 = root["field3"]; // "0"
+    const char* field4 = root["field4"]; // "0"
+    //debug
+    Serial.println("debug");
+    Serial.println(field1); 
+    Serial.println(field2); 
+    Serial.println(field3); 
+    Serial.println(field4); 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //TO DO: Clean Up, Parse, Rset TS, Connect to OctoPrint commands.
+    //TO DO: Clean Up, Parse, Connect to OctoPrint commands.
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 
     //update data
@@ -285,11 +298,12 @@ void loop() {
       Serial.println("connection failed");
       return;
     }
+    delay(100);
     //Reset POST commands
-    client.print(String("GET ")  + "/update?api_key="+POSTWriteApiKey+"&field1=0&field2=0&field3=0&field4=0 HTTP/1.1\r\n" +
+    /*client.print(String("GET ")  + "/update?api_key="+POSTWriteApiKey+"&field1=0&field2=0&field3=0&field4=0 HTTP/1.1\r\n" +
                 "Host: " + host + "\r\n" + 
                 "Connection: close\r\n\r\n");
-  
+  */
     if (debug == true){
       //serial print data: for debugging
       Serial.println("Thingspeak Updated");
