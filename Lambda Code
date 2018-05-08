@@ -86,7 +86,7 @@ PrinterHost.prototype.intentHandlers = {
         var speechOutput = 'please say ,confirm start, to confirm';
         var URL = "https://api.thingspeak.com/update?api_key="+postWriteKey+"&field1=1&field2=0&field3=0&field4=0";
         https.get(URL, function(res) {});
-        response.tell(speechOutput);
+        response.ask(speechOutput);
     },
     "ConfirmStart": function(intent, session, response){
         var speechOutput = 'okay, I have started the print of '+ fileName ;
@@ -98,7 +98,7 @@ PrinterHost.prototype.intentHandlers = {
         var speechOutput = 'please say, confirm cancel, to confirm';
         var URL = "https://api.thingspeak.com/update?api_key="+postWriteKey+"&field1=0&field2=1&field3=0&field4=0";
         https.get(URL, function(res) {});
-        response.tell(speechOutput);
+        response.ask(speechOutput);
     },
     "ConfirmCancel": function(intent, session, response){
         var speechOutput = 'okay, I have canceled the print of '+ fileName;
@@ -110,7 +110,7 @@ PrinterHost.prototype.intentHandlers = {
         var speechOutput = 'please say, confirm restart, to confirm';
         var URL = "https://api.thingspeak.com/update?api_key="+postWriteKey+"&field1=0&field2=0&field3=1&field4=0";
         https.get(URL, function(res) {});
-        response.tell(speechOutput);
+        response.ask(speechOutput);
     },
     "ConfirmRestart": function(intent, session, response){
         var speechOutput = 'okay, I have restarted the print of '+ fileName ;
@@ -122,7 +122,7 @@ PrinterHost.prototype.intentHandlers = {
         var speechOutput = 'please say, confirm pause, or ,confirm resume, to confirm';
         var URL = "https://api.thingspeak.com/update?api_key="+postWriteKey+"&field1=0&field2=0&field3=0&field4=1";
         https.get(URL, function(res) {});
-        response.tell(speechOutput);
+        response.ask(speechOutput);
     },
     "ConfirmPause": function(intent, session, response){
         var speechOutput = 'okay, I have paused or resumed the print of '+ fileName ;
