@@ -1,0 +1,341 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "printer host",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "EstimatedTime",
+                    "slots": [],
+                    "samples": [
+                        "how long is my print expected to take",
+                        "how long should this print take",
+                        "how long should it take my printer to print this model",
+                        "how much time will it take for my printer to print this",
+                        "what is the estimated print time of my print",
+                        "what's the expected print time of my print",
+                        "what amount of time is necessary for my print to fully complete",
+                        "how much time will my print take",
+                        "how much time will ti take my print to fully print",
+                        "how long my print is expected to last",
+                        "how much time my print is estimated to last",
+                        "the amount of time my three dee print will take",
+                        "how long it will take my three dee print to print from start to finish",
+                        "estimated time",
+                        "total estimated print time",
+                        "expected print time",
+                        "for the expected print time",
+                        "for the ammount of time my print should take",
+                        "for the time my print will take",
+                        "for the time my three dee printer will take to complete"
+                    ]
+                },
+                {
+                    "name": "FileName",
+                    "slots": [],
+                    "samples": [
+                        "file name",
+                        "what file do I have selected",
+                        "which file I have selected",
+                        "which file I am printing",
+                        "what file I am printing",
+                        "for the name of the file I have selected",
+                        "for the name of the file I have chosen",
+                        "for the name of the file that is printing",
+                        "what is printing",
+                        "what my three dee printer is printing",
+                        "what file my three dee printer is three dee printing",
+                        "the file name",
+                        "to tell me the name of the file I have selected",
+                        "to tell me which file I am printing",
+                        "to tell my what file I my printer is currecntly printing",
+                        "what file is qued",
+                        "for the file name",
+                        "to tell me te file name",
+                        "what S T L my printer is printing",
+                        "which g code is my printer printing",
+                        "what is my printer printing currently"
+                    ]
+                },
+                {
+                    "name": "Help",
+                    "slots": [],
+                    "samples": [
+                        "help",
+                        "how do I use this",
+                        "please help",
+                        "explain the functionality",
+                        "how are you used",
+                        "how am I supposed to use you",
+                        "I am lost",
+                        "please inform me of your functions",
+                        "what can you do",
+                        "what is it that you are capable of",
+                        "help me navigate this skill",
+                        "skill help",
+                        "to help me",
+                        "to help me use it",
+                        "to help me understand it",
+                        "to explain how to use it",
+                        "to explain hhow to use the skill",
+                        "how do you use three dee printer host",
+                        "how is three dee printer host used",
+                        "to give me a hand"
+                    ]
+                },
+                {
+                    "name": "Overview",
+                    "slots": [],
+                    "samples": [
+                        "overview",
+                        "give me an overview",
+                        "to overview",
+                        "please overview",
+                        "to please give me an overview",
+                        "to summarise my print",
+                        "to get me an overview of my print",
+                        "to give a summary of my print",
+                        "to tell me how my print is doing",
+                        "to tell me a summary of my print",
+                        "how is my print",
+                        "how is my print going",
+                        "what is happening with my print",
+                        "what is going on with my print",
+                        "how is myy three dee print",
+                        "how's my three dee print doing",
+                        "to check on my print",
+                        "to check on my three dee print",
+                        "to give me a summary of my print",
+                        "to give me a summary of my three dee print"
+                    ]
+                },
+                {
+                    "name": "PercentComplete",
+                    "slots": [],
+                    "samples": [
+                        "what percent of my print is completed",
+                        "percent completed",
+                        "what percent of my print has been printed",
+                        "to what extent has my print finished",
+                        "what percent is my print done",
+                        "how much of my print has been printed",
+                        "what percent is my print completed",
+                        "to tell me what ercent of my print is finished",
+                        "to tell me what percentage my print is completed",
+                        "what percent of my print is done",
+                        "how far my print is in percentage",
+                        "for the percentage my print has completed",
+                        "for the percentage of which my print has printed",
+                        "the percentage of my print which has been printed",
+                        "the amount that my print is finished in percent",
+                        "how much percent my printer is done",
+                        "the percent completion of my print",
+                        "the percent which my printer has completed",
+                        "how much print is done in percent",
+                        "the percentage of three dee print completion",
+                        "the percentage my three dee print has printed",
+                        "how many percents my printer has printed"
+                    ]
+                },
+                {
+                    "name": "PrinterData",
+                    "slots": [],
+                    "samples": [
+                        "printer data",
+                        "how is my printer",
+                        "how is my printer doing",
+                        "what is going on with my printer",
+                        "how well is my printer doing",
+                        "status",
+                        "operation",
+                        "is my printer printing",
+                        "is my printer paused",
+                        "is my printer connected",
+                        "printer",
+                        "if my printer is broken",
+                        "if my three dee printer is functioning",
+                        "if my printer is functining",
+                        "to tell me the status of my printer",
+                        "about my printer",
+                        "about my three dee printer",
+                        "if my printer is running smoothly",
+                        "to tell me how my printer is doing",
+                        "how's my printer"
+                    ]
+                },
+                {
+                    "name": "StartPOST",
+                    "slots": [],
+                    "samples": [
+                        "start my print",
+                        "start a print of the current selected file",
+                        "commence printing",
+                        "begin a print",
+                        "begin my print",
+                        "start print",
+                        "start printing",
+                        "start the print",
+                        "start printing selected file",
+                        "start printing the file i selected",
+                        "start printing the currently selected file"
+                    ]
+                },
+                {
+                    "name": "TimeLeft",
+                    "slots": [],
+                    "samples": [
+                        "how much time is left on my print",
+                        "how much time is left on my three dee print",
+                        "how much longer will it be until my print is done",
+                        "how much longer will it be until my three dee print is done",
+                        "how much more time is left on my print",
+                        "how much more time is left on the print",
+                        "how much more time is left on my three dee print",
+                        "how much more time is left on the three dee print",
+                        "how much longer does my printer have to go",
+                        "how much longer does my printer have left",
+                        "how much time until completion",
+                        "when will my print be done",
+                        "when will my print complete",
+                        "when will my print be finished",
+                        "when will the print be finished",
+                        "time left",
+                        "how much more time",
+                        "time remaining",
+                        "to tell me how much time is left",
+                        "to tell my how much time is left opn my print"
+                    ]
+                },
+                {
+                    "name": "TimePrinted",
+                    "slots": [],
+                    "samples": [
+                        "how long has my printer been printing for",
+                        "how long has my three dee printer been printing for",
+                        "how much time has my three dee printer been prining for",
+                        "how many hours have been printed",
+                        "time printed",
+                        "how long has my print been going for",
+                        "how long has my print been printing",
+                        "how long has my three dee print been three dee printing",
+                        "to tell me how long my printer has been printing",
+                        "to tell me how much time my three dee print has been printing for",
+                        "how long my printer has been running",
+                        "how long my print has been three dee printing",
+                        "for how much time my printer has printed",
+                        "for how long my printer has been printing",
+                        "for how long my printer has been printing for",
+                        "for the time that I have been printing",
+                        "for the time that my print has been printing for",
+                        "for the amount of time that my printer has already priunted",
+                        "the amount of time for which my three dee printer has been three dee printing",
+                        "the time my printer has spent printing"
+                    ]
+                },
+                {
+                    "name": "CancelPOST",
+                    "slots": [],
+                    "samples": [
+                        "end the current print",
+                        "cancel the file currently printing",
+                        "cancel the file i am printing",
+                        "cancel the print that is printing",
+                        "cancel the print that is being printed",
+                        "cancel my current print",
+                        "end my print",
+                        "cancel",
+                        "cancel my print"
+                    ]
+                },
+                {
+                    "name": "RestartPOST",
+                    "slots": [],
+                    "samples": [
+                        "restart the file printing",
+                        "restart my three dee print",
+                        "restart the three dee print",
+                        "restart the print that is currently printing",
+                        "restart",
+                        "restart the file my three dee printer is printing",
+                        "restart my current three dee print",
+                        "restart the current print",
+                        "restart my print"
+                    ]
+                },
+                {
+                    "name": "PausePOST",
+                    "slots": [],
+                    "samples": [
+                        "pause the three dee print",
+                        "resume the three dee print",
+                        "resume the file being printed",
+                        "unpause the print my pinter is printing",
+                        "pause the print",
+                        "pause the current file",
+                        "resume the current model",
+                        "unpause my print",
+                        "unpause",
+                        "resume print",
+                        "resume printing",
+                        "resume",
+                        "pause",
+                        "pause my print"
+                    ]
+                },
+                {
+                    "name": "ConfirmPause",
+                    "slots": [],
+                    "samples": [
+                        "confirm the resume",
+                        "confirm resume",
+                        "please pause",
+                        "yes pause",
+                        "confirm pause"
+                    ]
+                },
+                {
+                    "name": "ConfirmStart",
+                    "slots": [],
+                    "samples": [
+                        "start confirm",
+                        "yes start",
+                        "confirm the start",
+                        "confirm start"
+                    ]
+                },
+                {
+                    "name": "ConfirmRestart",
+                    "slots": [],
+                    "samples": [
+                        "confirm the restart",
+                        "restart confirm",
+                        "restart confirmed",
+                        "confirm restart"
+                    ]
+                },
+                {
+                    "name": "confirmCancel",
+                    "slots": [],
+                    "samples": [
+                        "confirmed cancel",
+                        "cancel confirmed",
+                        "confirm the cancel",
+                        "confirm cancel"
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
+}
