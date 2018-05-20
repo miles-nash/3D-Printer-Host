@@ -41,10 +41,6 @@ PrinterHost.prototype.eventHandlers.onSessionEnded = function (sessionEndedReque
 };
 PrinterHost.prototype.intentHandlers = {
   
-    "Introduction": function (intent, session, response) {
-        var speechOutput = "Hey! I am printerhost, your 3d printer monitoring system. I can monitor your 3d printer by updating you on information such as printer state, percent job completion, and estimated time left on a print.";
-        response.tell(speechOutput);
-    },
     "Overview": function (intent, session, response) {
         var speechOutput = "Your print is " + percentComplete +
                 " percent complete and has " + timeLeftHours + " hours and " +
@@ -79,7 +75,8 @@ PrinterHost.prototype.intentHandlers = {
     },
     "PrinterData": function (intent, session, response){
         
-        var speechOutput = 'your printer is ' + operationalString + ' and is currently ' + statusString;
+        var speechOutput = 'your printer is ' + operationalString + ' and is currently ' + statusString +
+        '. The hotend is ' +toolTemp+ ' degrees celcius and the print bed is ' + bedTemp+ ' degrees ';
         response.tell(speechOutput);
     },
     "StartPOST": function (intent, session, response){
@@ -102,7 +99,7 @@ PrinterHost.prototype.intentHandlers = {
     },
     "ConfirmCancel": function(intent, session, response){
         var speechOutput = 'okay, I have canceled the print of '+ fileName;
-        var URL = "https://api.thingspeak.com/update?api_key="+postWriteKey+"&field1=0&field2=0&field3=0&field4=1";
+        var URL = "https://api.thingspeak.com/update?api_key="+postWriteKey+"&field1=0&field2=1&field3=0&field4=0";
         https.get(URL, function(res) {});
         response.tell(speechOutput);
     },
@@ -131,7 +128,7 @@ PrinterHost.prototype.intentHandlers = {
         response.tell(speechOutput);
     },
     "AMAZON.HelpIntent": function (intent, session, response) {
-        response.ask("You can say ask PrinterHost for Job statistics, or, you can ask about your printer... What can I do for you?", "What can I do for you?");
+        response.ask("Start by asking 'Alexa, ask printer host for an overview' to get an overview of your printer. You can also ask about specific attributes of your printer, or tell your printer to do something, What can I do for you?");
     },
     "AMAZON.StopIntent": function (intent, session, response) {
         var speechOutput = "Goodbye";
@@ -148,7 +145,7 @@ PrinterHost.prototype.intentHandlers = {
  */
 function handlePrinterHostRequest(response) {
     // Create speech output
-    var speechOutput = "Greetings, I did not understand what you want. How may I serve you?";
+    var speechOutput = "Hey! I am printerhost, your 3d printer monitoring system. I can monitor your 3d printer by updating you on information such as printer state, percent job completion, and estimated time left on a print.";
     var cardTitle = "Initial Request";
     response.tellWithCard(speechOutput, cardTitle, speechOutput);
 }
@@ -166,7 +163,8 @@ exports.handler = function (event, context) {
             timeLeftHours = JSON.parse(d).field7;
             timeLeftMinutes = JSON.parse(d).field8;
            
-          
+            fileName = fileName.replace('.gcode', ' ');
+            fileName = fileName.replace('_', ' ')
            
             
             
@@ -202,6 +200,8 @@ exports.handler = function (event, context) {
               statusString = 'printing';
           }else if(status == "2"){
               statusString = 'paused';
+          }else if(status == "3"){
+              statusString = 'standing by'
           }else{
               statusString = 'disconnected or experiencing an error';
           }
