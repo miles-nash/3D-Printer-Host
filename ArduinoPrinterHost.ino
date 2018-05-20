@@ -1,12 +1,16 @@
+
 /*
+Printer Host 1.0.0
 This sketch will receive data from octoprint, write it to thingspeak channels, and display the data on a neopixel ring.
  */
+#include <ThingSpeak.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266WiFi.h>
 #include <String.h>
 #include <OctoPrintAPI.h>
 #include <Adafruit_NeoPixel.h>
 #include <WiFiClient.h>
+#include <ArduinoJson.h>
 
 unsigned long api_mtbs = 60000; //mean time between api requests
 unsigned long api_lasttime = 0;   //last time api request has been done
@@ -21,19 +25,20 @@ WiFiClient client;
 //              User Data
 //------------------------------------------
 
-const char* ssid     = "----------";       //your SSID(name) of WIFI
-const char* password = "----------";       // password of Wifi
+const char* ssid     = "----------";                  //your SSID(name) of WIFI
+const char* password = "----------";                  // password of Wifi
 
-String OctoPrintAPIKey = "----------";     //API key from OctoPrint
-String PrinterTSAPIKey = "----------";     //write api key for thingspeak printer channel
-String JobTSAPIKey = "----------";         //write api key for thingspeak job channel
-String POSTWriteAPIKey = "----------";     //write api key for thingspeak POST channel
-String POSTReadApiKey = "----------";      //read api key for thingspeak POST channel
-String POSTid = "------";                  //channel id for thingspeak POST channel
+String OctoPrintAPIKey = "----------------";          //API key from OctoPrint
+unsigned long printerID = ------;                     //channel id of thingspeak printer channel
+const char * printerWriteApiKey = "----------------"; //write api key for thingspeak printer channel
+unsigned long jobID = ------;                         //channel id of thingspeak job channel
+const char * jobWriteApiKey = "----------------";     //write api key for thingspeak job channel
+String POSTWriteApiKey = "----------------";          //write api key for thingspeak POST channel
+String POSTReadApiKey = "----------------";           //read api key for thingspeak POST channel
+String POSTid = "------";                             //channel id for thingspeak POST channel
 
 IPAddress ip(--, -, -, ---);               // IP adress of Raspberry Pi. 11.1.1.111 = (11, 1, 1, 111)
 const int octoprint_httpPort = 80;         //If you are connecting through a router this will work, but you need a random port forwarded to the OctoPrint server from your router. Enter that port here if you are external
-
 
 //------------------------------------------
 //           Color Setttings
@@ -102,6 +107,7 @@ void setup() {
   // start by connecting to WiFi 
   
   wifiConnect();
+  ThingSpeak.begin(client);
 
     //Reset POST commands
     client.print(String("GET ")  + "/update?api_key="+POSTWriteApiKey+"&field1=0&field2=0&field3=0&field4=0 HTTP/1.1\r\n" +
@@ -201,8 +207,8 @@ void loop() {
         status = "4";
       }
       //map all received data to variables and convert times to hh:mm format
-      toolTemp = api.printerStats.printerTool0TempActual;
-      bedTemp = api.printerStats.printerBedTempActual;
+      toolTemp = (api.printerStats.printerTool0TempActual);
+      bedTemp = (api.printerStats.printerBedTempActual);
       fileName = api.printJob.jobFileName;
       estimatedTime = api.printJob.estimatedPrintTime;
       percentComplete = api.printJob.progressCompletion;
@@ -304,26 +310,26 @@ void loop() {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 
     //update data
+    
     //updates values in printer thingspeak channel
-    client.print(String("GET ")  + "/update?api_key="+printerTSAPIKey+"&field1="+operational+"&field2="+status+"&field3="+toolTemp+"&field4="+bedTemp+" HTTP/1.1\r\n" +
-                "Host: " + host + "\r\n" + 
-                "Connection: close\r\n\r\n");                                                         //updates values in printer thingspeak channel   
-                
-    if (!client.connect(host, httpPort)) {
-      Serial.println("connection failed");
-      return;
-    }
+    ThingSpeak.setField(1, operational);
+    ThingSpeak.setField(2, status);
+    ThingSpeak.setField(3, toolTemp);
+    ThingSpeak.setField(4, bedTemp);
+    ThingSpeak.writeFields(printerID, printerWriteApiKey);
+    Serial.print("TS printer channel updated");
 
-
-    //updates values in job thingspeak channel 
-    client.print(String("GET ")  + "/update?api_key="+jobTSAPIKey+"&field1="+fileName+"&field2="+estimatedTimeHours+"&field3="+estimatedTimeMinutes+"&field4="+percentComplete+"&field5="+timePrintedHours+"&field6="+timePrintedMinutes+"&field7="+timeLeftHours+"&field8="+timeLeftMinutes+" HTTP/1.1\r\n" +
-                "Host: " + host + "\r\n" + 
-                "Connection: close\r\n\r\n");                                                        //updates values in job thingspeak channel
-
-    if (!client.connect(host, httpPort)) {
-      Serial.println("connection failed");
-      return;
-    }
+    //updates values in job thingspeak channel
+    ThingSpeak.setField(1, fileName);
+    ThingSpeak.setField(2, estimatedTimeHours);
+    ThingSpeak.setField(3, estimatedTimeMinutes);
+    ThingSpeak.setField(4, percentComplete);
+    ThingSpeak.setField(5, timePrintedHours);
+    ThingSpeak.setField(6, timePrintedMinutes);
+    ThingSpeak.setField(7, timeLeftHours);
+    ThingSpeak.setField(8, timeLeftMinutes);
+    ThingSpeak.writeFields(jobID, jobWriteApiKey);
+    
     delay(100);
     //Reset POST commands
     client.print(String("GET ")  + "/update?api_key="+POSTWriteApiKey+"&field1=0&field2=0&field3=0&field4=0 HTTP/1.1\r\n" +
@@ -333,27 +339,27 @@ void loop() {
     if (debug == true){
       //serial print data: for debugging
       Serial.println("Thingspeak Updated");
-      delay(10);
+      
       Serial.println("operational = " + operational);   
-      delay(10);
+      
       Serial.println("status = " + status);   
-      delay(10);
+      
       Serial.println("tool temp = " + toolTemp);
-      delay(10);
+     
       Serial.println("bed temp = " + bedTemp);
-      delay(10);
+      
       Serial.println("file name = " + fileName);   
-      delay(10);
+      
       Serial.println("estimated print time = " + estimatedTimeMinutes);   
-      delay(10);
+      
       Serial.println("percent complete = " + percentComplete);   
-      delay(10);
+      
       Serial.println("hours printed = " + timePrintedHours);   
-      delay(10);
+     
       Serial.println("minutes printed = " + timePrintedMinutes);   
-      delay(10);
+     
       Serial.println("Hours remaining = " + timeLeftHours); 
-      delay(10);
+      
       Serial.println("mnutes remaining = " + timeLeftMinutes); 
     }
     api2_lasttime = millis();
