@@ -69,32 +69,6 @@
                     ]
                 },
                 {
-                    "name": "Help",
-                    "slots": [],
-                    "samples": [
-                        "help",
-                        "how do I use this",
-                        "please help",
-                        "explain the functionality",
-                        "how are you used",
-                        "how am I supposed to use you",
-                        "I am lost",
-                        "please inform me of your functions",
-                        "what can you do",
-                        "what is it that you are capable of",
-                        "help me navigate this skill",
-                        "skill help",
-                        "to help me",
-                        "to help me use it",
-                        "to help me understand it",
-                        "to explain how to use it",
-                        "to explain hhow to use the skill",
-                        "how do you use three dee printer host",
-                        "how is three dee printer host used",
-                        "to give me a hand"
-                    ]
-                },
-                {
                     "name": "Overview",
                     "slots": [],
                     "samples": [
