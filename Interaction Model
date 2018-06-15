@@ -31,39 +31,6 @@
                         "how long my print is expected to last",
                         "how much time my print is estimated to last",
                         "the amount of time my three dee print will take",
-                        "how long it will take my three dee print to{
-    "interactionModel": {
-        "languageModel": {
-            "invocationName": "printer host",
-            "intents": [
-                {
-                    "name": "AMAZON.CancelIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.HelpIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.StopIntent",
-                    "samples": []
-                },
-                {
-                    "name": "EstimatedTime",
-                    "slots": [],
-                    "samples": [
-                        "how long is my print expected to take",
-                        "how long should this print take",
-                        "how long should it take my printer to print this model",
-                        "how much time will it take for my printer to print this",
-                        "what is the estimated print time of my print",
-                        "what's the expected print time of my print",
-                        "what amount of time is necessary for my print to fully complete",
-                        "how much time will my print take",
-                        "how much time will ti take my print to fully print",
-                        "how long my print is expected to last",
-                        "how much time my print is estimated to last",
-                        "the amount of time my three dee print will take",
                         "how long it will take my three dee print to print from start to finish",
                         "estimated time",
                         "total estimated print time",
@@ -339,6 +306,23 @@
                         "cancel confirmed",
                         "confirm the cancel",
                         "confirm cancel"
+                    ]
+                },
+                {
+                    "name": "CommandPOST",
+                    "slots": [],
+                    "samples": [
+                        "have the printer do a command",
+                        "send a custom command",
+                        "excecute a custom command"
+                    ]
+                },
+                {
+                    "name": "ConfirmCommand",
+                    "slots": [],
+                    "samples": [
+                        "command confirmed",
+                        "confirm command"
                     ]
                 }
             ],
